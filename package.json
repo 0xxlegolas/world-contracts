@@ -1,0 +1,14 @@
+{
+  "name": "world-contracts",
+  "version": "1.0.0",
+  "description": "contracts for eve frontier",
+  "scripts": {
+    "fmt": "prettier --plugin=@mysten/prettier-plugin-move --write \"**/**/*.move\""
+  },
+  "dependencies": {
+    "@mysten/prettier-plugin-move": "^0.3.1",
+    "prettier": "^3.1.1"
+  },
+  "author": "EVE Frontier",
+  "license": "MIT"
+}

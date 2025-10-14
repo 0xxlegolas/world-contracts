@@ -1,0 +1,14 @@
+# Move build artifacts
+**/**/build
+**/**/target
+**/**/.trace
+**/**/.coverage*
+
+# Node.js dependencies
+node_modules/
+
+# OS generated files
+.DS_Store
+
+# IDE / Editor files
+.vscode/
