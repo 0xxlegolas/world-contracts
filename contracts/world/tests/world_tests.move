@@ -1,23 +1,23 @@
 #[test_only]
-module world::world_tests {
-    use sui::test_scenario;
-    use world::world;
+module world::world_tests;
 
-    #[test]
-    fun test_init_creates_governor_cap() {
-        let governor = @0xA;
-        let mut scenario = test_scenario::begin(governor);
-        {
-            let ctx = test_scenario::ctx(&mut scenario);
-            world::init_for_testing(ctx);
-        };
-        // Check that GovernerCap was transferred to the creator of the contract
-        test_scenario::next_tx(&mut scenario, governor);
-        {
-            let gov_cap = test_scenario::take_from_sender<world::GovernorCap>(&scenario);
+use sui::test_scenario;
+use world::world;
 
-            test_scenario::return_to_sender(&scenario, gov_cap);
-        };
-        test_scenario::end(scenario);
-    }
+#[test]
+fun creates_governor_cap() {
+    let governor = @0xA;
+    let mut scenario = test_scenario::begin(governor);
+    {
+        let ctx = test_scenario::ctx(&mut scenario);
+        world::init_for_testing(ctx);
+    };
+    // Check that GovernerCap was transferred to the creator of the contract
+    test_scenario::next_tx(&mut scenario, governor);
+    {
+        let gov_cap = test_scenario::take_from_sender<world::GovernorCap>(&scenario);
+
+        test_scenario::return_to_sender(&scenario, gov_cap);
+    };
+    test_scenario::end(scenario);
 }
