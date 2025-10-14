@@ -1,7 +1,7 @@
 #[test_only]
 module world::world_tests {
     use sui::test_scenario;
-    use world::world::{Self, GovernorCap};
+    use world::world;
 
     #[test]
     fun test_init_creates_governor_cap() {
