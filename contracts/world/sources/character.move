@@ -31,7 +31,7 @@ public fun create_character(
     // TODO: use deterministic id generation using the game id
     // If we use this, this will fail if we try to create the same ID twice, Cannot create same character twice
     let character = Character {
-        id: object::new(ctx), 
+        id: object::new(ctx),
         game_character_id: game_character_id,
         tribe_id: tribe_id,
         name: name,
