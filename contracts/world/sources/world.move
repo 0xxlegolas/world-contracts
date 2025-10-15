@@ -12,8 +12,7 @@ public struct WorldCreated has copy, drop {
     governor: address,
 }
 
-// On init, create a Governor Cap and send it to the creator of the contract
-// TODO: mint a initial supply of eve tokens
+// TODO: mint initial supply of eve tokens
 fun init(ctx: &mut TxContext) {
     let gov_cap = GovernorCap {
         id: object::new(ctx),
