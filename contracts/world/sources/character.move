@@ -2,58 +2,80 @@ module world::character;
 
 use std::string::String;
 use sui::event;
-use world::authority::{OwnerCap, AdminCap, mint_owner_cap};
+use world::authority::{OwnerCap, AdminCap};
 
-public struct Character has key, store {
-    id: UID,
-    game_character_id: u64,
-    tribe_id: u64,
-    name: String,
-    owner_cap: ID,
-}
-
+// Events
 public struct CharacterCreated has copy, drop {
     character_id: ID,
     game_character_id: u64,
     tribe_id: u64,
     name: String,
-    character_address: address,
-    owner_cap: ID,
 }
 
-// Create a character and mint a owner capability to the character address
+public struct Character has key {
+    id: UID,
+    game_character_id: u64,
+    tribe_id: u64,
+    name: String,
+}
+
 public fun create_character(
-    admin_cap: &AdminCap,
-    character_address: address,
+    _: &AdminCap,
     game_character_id: u64,
     tribe_id: u64,
     name: String,
     ctx: &mut TxContext,
-) {
-    //Mint a owner capability to the character address
-    let owner_cap = mint_owner_cap(admin_cap, ctx);
+): Character {
+    // TODO: Should we do empty field checks ?
 
+    // TODO: use deterministic id generation using the game id
+    // If we use this, this will fail if we try to create the same ID twice, Cannot create same character twice
     let character = Character {
-        id: object::new(ctx), // TODO: use deterministic id generation using the game id
+        id: object::new(ctx), 
         game_character_id: game_character_id,
         tribe_id: tribe_id,
         name: name,
-        owner_cap: object::id(&owner_cap),
     };
     event::emit(CharacterCreated {
         character_id: object::id(&character),
         game_character_id: game_character_id,
         tribe_id: tribe_id,
         name: name,
-        character_address: character_address,
-        owner_cap: object::id(&owner_cap),
     });
-    transfer::public_transfer(owner_cap, character_address);
+    character
+}
+
+public fun transfer_character(character: Character, _: &AdminCap) {
     transfer::share_object(character);
 }
 
 // renames a character using ownerCap
+public fun rename_character(character: &mut Character, _: &OwnerCap, name: String) {
+    character.name = name;
+}
+
+// Should we add a ownerCap ?
+public fun update_tribe(character: &mut Character, _: &AdminCap, tribe_id: u64) {
+    character.tribe_id = tribe_id;
+}
 
 // delete a character using adminCap
+public fun delete_character(character: Character, _: &AdminCap) {
+    let Character { id, .. } = character;
+    id.delete();
+}
 
-// update a character tribe using both ownerCap and adminCap ? or just adminCap ?
+#[test_only]
+public fun game_character_id(character: &Character): u64 {
+    character.game_character_id
+}
+
+#[test_only]
+public fun tribe_id(character: &Character): u64 {
+    character.tribe_id
+}
+
+#[test_only]
+public fun name(character: &Character): String {
+    character.name
+}
