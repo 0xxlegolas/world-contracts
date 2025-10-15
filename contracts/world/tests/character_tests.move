@@ -26,7 +26,7 @@ fun setup_world(ts: &mut ts::Scenario) {
     ts::next_tx(ts, GOVERNOR);
     {
         let gov_cap = ts::take_from_sender<GovernorCap>(ts);
-        authority::mint_admin_cap(&gov_cap, ADMIN, ts::ctx(ts));
+        authority::create_admin_cap(&gov_cap, ADMIN, ts::ctx(ts));
         ts::return_to_sender(ts, gov_cap);
     };
 }
@@ -35,13 +35,13 @@ fun setup_owner_cap(ts: &mut ts::Scenario, owner: address) {
     ts::next_tx(ts, ADMIN);
     {
         let admin_cap = ts::take_from_sender<AdminCap>(ts);
-        let owner_cap = authority::mint_owner_cap(&admin_cap, ts::ctx(ts));
+        let owner_cap = authority::create_owner_cap(&admin_cap, ts::ctx(ts));
         authority::transfer_owner_cap(owner_cap, &admin_cap, owner);
         ts::return_to_sender(ts, admin_cap);
     };
 }
 
-fun setup_character(ts: &mut ts::Scenario, game_id: u64, tribe_id: u64, name: vector<u8>) {
+fun setup_character(ts: &mut ts::Scenario, game_id: u32, tribe_id: u32, name: vector<u8>) {
     ts::next_tx(ts, ADMIN);
     {
         let admin_cap = ts::take_from_sender<AdminCap>(ts);
@@ -52,7 +52,7 @@ fun setup_character(ts: &mut ts::Scenario, game_id: u64, tribe_id: u64, name: ve
             utf8(name),
             ts::ctx(ts),
         );
-        character::transfer_character(character, &admin_cap);
+        character::share_character(character, &admin_cap);
         ts::return_to_sender(ts, admin_cap);
     };
 }
@@ -154,7 +154,7 @@ fun test_create_character_without_admin_cap() {
             utf8(b"test"),
             ts::ctx(&mut ts),
         );
-        character::transfer_character(character, &admin_cap);
+        character::share_character(character, &admin_cap);
         abort
     }
 }

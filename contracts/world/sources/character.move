@@ -5,24 +5,24 @@ use sui::event;
 use world::authority::{OwnerCap, AdminCap};
 
 // Events
-public struct CharacterCreated has copy, drop {
+public struct CharacterCreatedEvent has copy, drop {
     character_id: ID,
-    game_character_id: u64,
-    tribe_id: u64,
+    game_character_id: u32,
+    tribe_id: u32,
     name: String,
 }
 
 public struct Character has key {
     id: UID,
-    game_character_id: u64,
-    tribe_id: u64,
+    game_character_id: u32,
+    tribe_id: u32,
     name: String,
 }
 
 public fun create_character(
     _: &AdminCap,
-    game_character_id: u64,
-    tribe_id: u64,
+    game_character_id: u32,
+    tribe_id: u32,
     name: String,
     ctx: &mut TxContext,
 ): Character {
@@ -36,7 +36,7 @@ public fun create_character(
         tribe_id: tribe_id,
         name: name,
     };
-    event::emit(CharacterCreated {
+    event::emit(CharacterCreatedEvent {
         character_id: object::id(&character),
         game_character_id: game_character_id,
         tribe_id: tribe_id,
@@ -45,7 +45,7 @@ public fun create_character(
     character
 }
 
-public fun transfer_character(character: Character, _: &AdminCap) {
+public fun share_character(character: Character, _: &AdminCap) {
     transfer::share_object(character);
 }
 
@@ -55,7 +55,7 @@ public fun rename_character(character: &mut Character, _: &OwnerCap, name: Strin
 }
 
 // Should we add a ownerCap ?
-public fun update_tribe(character: &mut Character, _: &AdminCap, tribe_id: u64) {
+public fun update_tribe(character: &mut Character, _: &AdminCap, tribe_id: u32) {
     character.tribe_id = tribe_id;
 }
 
@@ -66,12 +66,12 @@ public fun delete_character(character: Character, _: &AdminCap) {
 }
 
 #[test_only]
-public fun game_character_id(character: &Character): u64 {
+public fun game_character_id(character: &Character): u32 {
     character.game_character_id
 }
 
 #[test_only]
-public fun tribe_id(character: &Character): u64 {
+public fun tribe_id(character: &Character): u32 {
     character.tribe_id
 }
 

@@ -7,7 +7,7 @@ public struct GovernorCap has key {
     governor: address,
 }
 
-public struct WorldCreated has copy, drop {
+public struct WorldCreatedEvent has copy, drop {
     governor_cap_id: ID,
     governor: address,
 }
@@ -19,7 +19,7 @@ fun init(ctx: &mut TxContext) {
         governor: ctx.sender(),
     };
 
-    event::emit(WorldCreated {
+    event::emit(WorldCreatedEvent {
         governor_cap_id: object::id(&gov_cap),
         governor: ctx.sender(),
     });

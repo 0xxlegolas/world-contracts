@@ -5,7 +5,7 @@ use sui::test_scenario as ts;
 use world::{authority::{Self, AdminCap}, world::{Self, GovernorCap}};
 
 #[test]
-fun mint_and_burn_admin_cap() {
+fun create_and_delete_admin_cap() {
     let _governor = @0xA;
     let _admin = @0xB;
 
@@ -17,7 +17,7 @@ fun mint_and_burn_admin_cap() {
     ts::next_tx(&mut ts, _governor);
     {
         let gov_cap = ts::take_from_sender<GovernorCap>(&ts);
-        authority::mint_admin_cap(&gov_cap, _admin, ts::ctx(&mut ts));
+        authority::create_admin_cap(&gov_cap, _admin, ts::ctx(&mut ts));
 
         ts::return_to_sender(&ts, gov_cap);
     };
@@ -27,7 +27,7 @@ fun mint_and_burn_admin_cap() {
         let gov_cap = ts::take_from_sender<GovernorCap>(&ts);
         let admin_cap = ts::take_from_address<AdminCap>(&ts, _admin);
 
-        authority::burn_admin_cap(admin_cap, &gov_cap);
+        authority::delete_admin_cap(admin_cap, &gov_cap);
 
         ts::return_to_sender(&ts, gov_cap);
     };
@@ -36,7 +36,7 @@ fun mint_and_burn_admin_cap() {
 }
 
 #[test]
-fun mint_tranfer_and_burn_owner_cap() {
+fun create_tranfer_and_delete_owner_cap() {
     let _governor = @0xA;
     let _admin = @0xB;
     let _userA = @0xC;
@@ -49,7 +49,7 @@ fun mint_tranfer_and_burn_owner_cap() {
     ts::next_tx(&mut ts, _governor);
     {
         let gov_cap = ts::take_from_sender<world::GovernorCap>(&ts);
-        authority::mint_admin_cap(&gov_cap, _admin, ts::ctx(&mut ts));
+        authority::create_admin_cap(&gov_cap, _admin, ts::ctx(&mut ts));
 
         ts::return_to_sender(&ts, gov_cap);
     };
@@ -58,7 +58,7 @@ fun mint_tranfer_and_burn_owner_cap() {
     {
         let admin_cap = ts::take_from_sender<authority::AdminCap>(&ts);
 
-        let owner_cap = authority::mint_owner_cap(&admin_cap, ts::ctx(&mut ts));
+        let owner_cap = authority::create_owner_cap(&admin_cap, ts::ctx(&mut ts));
         authority::transfer_owner_cap(owner_cap, &admin_cap, _userA);
 
         ts::return_to_sender(&ts, admin_cap);
@@ -70,7 +70,7 @@ fun mint_tranfer_and_burn_owner_cap() {
         let admin_cap = ts::take_from_sender<authority::AdminCap>(&ts);
 
         // This should not be possible, but the tests are not working as expected
-        authority::burn_owner_cap(owner_cap, &admin_cap);
+        authority::delete_owner_cap(owner_cap, &admin_cap);
 
         ts::return_to_sender(&ts, admin_cap);
     };
