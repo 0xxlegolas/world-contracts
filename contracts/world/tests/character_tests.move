@@ -31,11 +31,11 @@ fun setup_world(ts: &mut ts::Scenario) {
     };
 }
 
-fun setup_owner_cap(ts: &mut ts::Scenario, owner: address) {
+fun setup_owner_cap(ts: &mut ts::Scenario, owner: address, character_id: ID) {
     ts::next_tx(ts, ADMIN);
     {
         let admin_cap = ts::take_from_sender<AdminCap>(ts);
-        let owner_cap = authority::create_owner_cap(&admin_cap, ts::ctx(ts));
+        let owner_cap = authority::create_owner_cap(&admin_cap, character_id, ts::ctx(ts));
         authority::transfer_owner_cap(owner_cap, &admin_cap, owner);
         ts::return_to_sender(ts, admin_cap);
     };
@@ -81,7 +81,15 @@ fun test_rename_character() {
     let mut ts = ts::begin(GOVERNOR);
     setup_world(&mut ts);
     setup_character(&mut ts, 1, 100, b"test");
-    setup_owner_cap(&mut ts, USER_A);
+
+    ts::next_tx(&mut ts, USER_A);
+    {
+        let character = ts::take_shared<Character>(&ts);
+        let character_id = object::id(&character);
+        ts::return_shared(character);
+
+        setup_owner_cap(&mut ts, USER_A, character_id);
+    };
 
     ts::next_tx(&mut ts, USER_A);
     {

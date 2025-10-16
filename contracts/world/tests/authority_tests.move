@@ -58,7 +58,12 @@ fun create_tranfer_and_delete_owner_cap() {
     {
         let admin_cap = ts::take_from_sender<authority::AdminCap>(&ts);
 
-        let owner_cap = authority::create_owner_cap(&admin_cap, ts::ctx(&mut ts));
+        let dummy_character_object_id = object::id_from_address(@0x1234);
+        let owner_cap = authority::create_owner_cap(
+            &admin_cap,
+            dummy_character_object_id,
+            ts::ctx(&mut ts),
+        );
         authority::transfer_owner_cap(owner_cap, &admin_cap, _userA);
 
         ts::return_to_sender(&ts, admin_cap);
@@ -69,7 +74,7 @@ fun create_tranfer_and_delete_owner_cap() {
         let owner_cap = ts::take_from_address<authority::OwnerCap>(&ts, _userA);
         let admin_cap = ts::take_from_sender<authority::AdminCap>(&ts);
 
-        // This should not be possible, but the tests are not working as expected
+        // Only possible in tests
         authority::delete_owner_cap(owner_cap, &admin_cap);
 
         ts::return_to_sender(&ts, admin_cap);

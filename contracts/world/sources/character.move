@@ -1,3 +1,8 @@
+/// This module manages character creation and lifecycle with capability-based access control.
+///
+/// Game characters have flexible ownership and access control beyond simple wallet-based ownership.
+/// Characters are shared objects and mutable by admin and the character owner using capabilities.
+
 module world::character;
 
 use std::string::String;
@@ -49,17 +54,14 @@ public fun share_character(character: Character, _: &AdminCap) {
     transfer::share_object(character);
 }
 
-// renames a character using ownerCap
 public fun rename_character(character: &mut Character, _: &OwnerCap, name: String) {
     character.name = name;
 }
 
-// Should we add a ownerCap ?
 public fun update_tribe(character: &mut Character, _: &AdminCap, tribe_id: u32) {
     character.tribe_id = tribe_id;
 }
 
-// delete a character using adminCap
 public fun delete_character(character: Character, _: &AdminCap) {
     let Character { id, .. } = character;
     id.delete();
