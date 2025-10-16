@@ -7,7 +7,10 @@ module world::character;
 
 use std::string::String;
 use sui::event;
-use world::authority::{OwnerCap, AdminCap};
+use world::authority::{Self, OwnerCap, AdminCap};
+
+#[error]
+const ECharacterNotAuthorized: u64 = 0;
 
 // Events
 public struct CharacterCreatedEvent has copy, drop {
@@ -54,7 +57,8 @@ public fun share_character(character: Character, _: &AdminCap) {
     transfer::share_object(character);
 }
 
-public fun rename_character(character: &mut Character, _: &OwnerCap, name: String) {
+public fun rename_character(character: &mut Character, owner_cap: &OwnerCap, name: String) {
+    assert!(authority::is_authorized(owner_cap, object::id(character)), ECharacterNotAuthorized);
     character.name = name;
 }
 

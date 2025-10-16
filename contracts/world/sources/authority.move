@@ -65,3 +65,9 @@ public fun delete_owner_cap(owner_cap: OwnerCap, _: &AdminCap) {
     let OwnerCap { id, .. } = owner_cap;
     id.delete();
 }
+
+// Checks if the `OwnerCap` is allowed to access the object with the given `object_id`.
+/// Returns true iff the `OwnerCap` has mutation access for the specified object.
+public fun is_authorized(owner_cap: &OwnerCap, object_id: ID): bool {
+    owner_cap.owned_object_id == object_id
+}
