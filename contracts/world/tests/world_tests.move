@@ -12,7 +12,7 @@ fun creates_governor_cap() {
         let ctx = test_scenario::ctx(&mut scenario);
         world::init_for_testing(ctx);
     };
-    // Check that GovernerCap was transferred to the creator of the contract
+
     test_scenario::next_tx(&mut scenario, governor);
     {
         let gov_cap = test_scenario::take_from_sender<world::GovernorCap>(&scenario);
