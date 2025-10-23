@@ -6,7 +6,7 @@
 module world::character;
 
 use std::string::String;
-use sui::event;
+use sui::{derived_object, event};
 use world::authority::{Self, OwnerCap, AdminCap};
 
 #[error]
@@ -20,6 +20,10 @@ public struct CharacterCreatedEvent has copy, drop {
     name: String,
 }
 
+public struct CharacterRegistry has key {
+    id: UID,
+}
+
 public struct Character has key {
     id: UID,
     game_character_id: u32,
@@ -27,19 +31,28 @@ public struct Character has key {
     name: String,
 }
 
+fun init(ctx: &mut TxContext) {
+    transfer::share_object(CharacterRegistry {
+        id: object::new(ctx),
+    });
+}
+
 public fun create_character(
     _: &AdminCap,
+    registry: &mut CharacterRegistry,
     game_character_id: u32,
     tribe_id: u32,
     name: String,
-    ctx: &mut TxContext,
+    _: &mut TxContext,
 ): Character {
     // TODO: Should we do empty field checks ?
 
-    // TODO: use deterministic id generation using the game id
-    // If we use this, this will fail if we try to create the same ID twice, Cannot create same character twice
+    // Claim a derived UID using the game character id as the key
+    // This ensures deterministic character id  generation and prevents duplicate character creation under the same game id.
+    // The character id can be pre-computed using the registry object id and game_character_id
+    let character_uid = derived_object::claim(&mut registry.id, game_character_id);
     let character = Character {
-        id: object::new(ctx),
+        id: character_uid,
         game_character_id: game_character_id,
         tribe_id: tribe_id,
         name: name,
@@ -69,6 +82,16 @@ public fun update_tribe(character: &mut Character, _: &AdminCap, tribe_id: u32) 
 public fun delete_character(character: Character, _: &AdminCap) {
     let Character { id, .. } = character;
     id.delete();
+}
+
+#[test_only]
+public fun init_for_testing(ctx: &mut TxContext) {
+    init(ctx);
+}
+
+#[test_only]
+public fun id(character: &Character): ID {
+    object::id(character)
 }
 
 #[test_only]
