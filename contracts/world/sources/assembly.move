@@ -51,8 +51,7 @@ fun init(ctx: &mut TxContext) {
     });
 }
 
-// TODO: How to make this a public function and restrict access by a Liscense key ?
-// The Liscense key should be given to a another module calling this function.
+
 public fun create_assembly<T>(
     _: &AdminCap,
     registry: &mut AssemblyRegistry,
