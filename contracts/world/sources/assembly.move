@@ -51,7 +51,6 @@ fun init(ctx: &mut TxContext) {
     });
 }
 
-
 public fun create_assembly<T>(
     _: &AdminCap,
     registry: &mut AssemblyRegistry,
