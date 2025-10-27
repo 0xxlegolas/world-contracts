@@ -50,7 +50,7 @@ public struct PlainAssembly has key {
 // Simple inventory item with store ability
 #[allow(unused_field)]
 public struct InventoryItem has drop, store {
-    item_type_id: u32,
+    item_type_id: u64,
     quantity: u64,
 }
 
@@ -94,10 +94,10 @@ fun create_plain_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts.ctx(),
         );
@@ -110,8 +110,8 @@ fun create_plain_assembly() {
     ts::next_tx(&mut ts, ADMIN);
     {
         let assembly = ts::take_shared<Assembly<PlainAssembly>>(&ts);
-        assert_eq!(assembly::type_id(&assembly), 1u32);
-        assert_eq!(assembly::item_id(&assembly), 100u32);
+        assert_eq!(assembly::type_id(&assembly), 1u64);
+        assert_eq!(assembly::item_id(&assembly), 100u64);
         assert_eq!(assembly::volume(&assembly), 50u64);
         assert_eq!(assembly::status_to_u8(&assembly), 0);
         ts::return_shared(assembly);
@@ -131,10 +131,10 @@ fun create_storage_unit_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<StorageUnit>(
-            &admin_cap,
             &mut registry,
-            2u32,
-            200u32,
+            &admin_cap,
+            2u64,
+            200u64,
             1000u64,
             ts::ctx(&mut ts),
         );
@@ -165,10 +165,10 @@ fun anchor_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -206,10 +206,10 @@ fun unanchor_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -258,10 +258,10 @@ fun online_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -314,10 +314,10 @@ fun offline_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -383,10 +383,10 @@ fun destroy_assembly() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -424,10 +424,10 @@ fun anchor_assembly_invalid_type_id() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            0u32,
-            100u32,
+            &admin_cap,
+            0u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -452,10 +452,10 @@ fun unanchor_assembly_invalid_item_id() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            0u32,
+            &admin_cap,
+            1u64,
+            0u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -481,10 +481,10 @@ fun online_assembly_invalid_state() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );
@@ -526,10 +526,10 @@ fun offline_assembly_unauthorized() {
         let mut registry = ts::take_shared<AssemblyRegistry>(&ts);
 
         let assembly = assembly::create_assembly<PlainAssembly>(
-            &admin_cap,
             &mut registry,
-            1u32,
-            100u32,
+            &admin_cap,
+            1u64,
+            100u64,
             50u64,
             ts::ctx(&mut ts),
         );

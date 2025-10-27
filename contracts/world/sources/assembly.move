@@ -8,15 +8,17 @@ module world::assembly;
 use sui::{clock::Clock, derived_object, event};
 use world::authority::{Self, OwnerCap, AdminCap};
 
-// Defining error code from 0 ..n
-const ETypeIdEmpty: u64 = 0;
-const EItemIdEmpty: u64 = 1;
-const EAssemblyInvalidState: u64 = 2;
-const EAssemblyAccessNotAuthorized: u64 = 3;
+#[error(code = 0)]
+const ETypeIdEmpty: vector<u8> = b"Type ID is empty";
 
-// Should we do meaningful errors or the error code like above is enough ?
-// #[error(code = 2)]
-// const EAssemblyInvalidState: vector<u8> = b"Assembly is in an invalid state";
+#[error(code = 1)]
+const EItemIdEmpty: vector<u8> = b"Item ID is empty";
+
+#[error(code = 2)]
+const EAssemblyAccessNotAuthorized: vector<u8> = b"Assembly access not authorized";
+
+#[error(code = 3)]
+const EAssemblyInvalidState: vector<u8> = b"Assembly is in an invalid state";
 
 public enum AssemblyStatus has copy, drop, store {
     UNANCHORED,
@@ -31,16 +33,16 @@ public struct AssemblyRegistry has key {
 
 public struct Assembly<phantom T> has key {
     id: UID,
-    type_id: u32,
-    item_id: u32,
+    type_id: u64,
+    item_id: u64,
     volume: u64,
     status: AssemblyStatus,
 }
 
 public struct AssemblyCreatedEvent has copy, drop {
     assembly_id: ID,
-    type_id: u32,
-    item_id: u32,
+    type_id: u64,
+    item_id: u64,
     volume: u64,
     status: AssemblyStatus,
 }
@@ -52,10 +54,10 @@ fun init(ctx: &mut TxContext) {
 }
 
 public fun create_assembly<T>(
-    _: &AdminCap,
     registry: &mut AssemblyRegistry,
-    type_id: u32,
-    item_id: u32,
+    _: &AdminCap,
+    type_id: u64,
+    item_id: u64,
     volume: u64,
     _: &mut TxContext,
 ): Assembly<T> {
@@ -130,12 +132,12 @@ public fun init_for_testing(ctx: &mut TxContext) {
 }
 
 #[test_only]
-public fun type_id<T>(assembly: &Assembly<T>): u32 {
+public fun type_id<T>(assembly: &Assembly<T>): u64 {
     assembly.type_id
 }
 
 #[test_only]
-public fun item_id<T>(assembly: &Assembly<T>): u32 {
+public fun item_id<T>(assembly: &Assembly<T>): u64 {
     assembly.item_id
 }
 
