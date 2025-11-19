@@ -325,6 +325,7 @@ fun duplicate_game_id_fails() {
             ts::ctx(&mut ts),
         );
         character::share_character(character, &admin_cap);
+
         ts::return_shared(registry);
         ts::return_to_sender(&ts, admin_cap);
     };
@@ -344,6 +345,7 @@ fun duplicate_game_id_fails() {
             ts::ctx(&mut ts),
         );
         character::share_character(character, &admin_cap);
+
         ts::return_shared(registry);
         ts::return_to_sender(&ts, admin_cap);
     };
@@ -375,6 +377,7 @@ fun delete_recreate_character() {
             ts::ctx(&mut ts),
         );
         character::share_character(character, &admin_cap);
+
         ts::return_shared(registry);
         ts::return_to_sender(&ts, admin_cap);
     };
@@ -403,6 +406,7 @@ fun delete_recreate_character() {
         );
 
         character::share_character(character, &admin_cap);
+
         ts::return_shared(registry);
         ts::return_to_sender(&ts, admin_cap);
     };
@@ -507,8 +511,8 @@ fun update_tribe_to_zero() {
         let mut character = ts::take_shared<Character>(&ts);
 
         character::update_tribe(&mut character, &admin_cap, 0);
-        // This should abort with ETribeIdEmpty
 
+        // This should abort with ETribeIdEmpty
         ts::return_shared(character);
         ts::return_to_sender(&ts, admin_cap);
     };
