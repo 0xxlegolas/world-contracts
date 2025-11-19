@@ -4,6 +4,9 @@ module world::world_tests;
 use sui::test_scenario;
 use world::world;
 
+/// Tests that the world initialization creates a governor capability
+/// Scenario: World is initialized with a governor address
+/// Expected: GovernorCap is created and transferred to the governor
 #[test]
 fun creates_governor_cap() {
     let governor = @0xA;

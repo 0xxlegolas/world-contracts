@@ -10,6 +10,9 @@ public struct Gate has key {
     max_distance: u64,
 }
 
+/// Tests creating an assembly with location
+/// Scenario: Admin creates a gate assembly with a location hash
+/// Expected: Gate is created successfully with location attached
 #[test]
 fun create_assembly_with_location() {
     let mut ts = ts::begin(governor());
@@ -34,6 +37,9 @@ fun create_assembly_with_location() {
     ts::end(ts);
 }
 
+/// Tests updating an assembly's location
+/// Scenario: Admin updates the location hash of an existing gate
+/// Expected: Location hash is updated successfully
 #[test]
 fun update_assembly_location() {
     let mut ts = ts::begin(governor());
@@ -70,6 +76,9 @@ fun update_assembly_location() {
     ts::end(ts);
 }
 
+/// Tests verifying proximity between two locations
+/// Scenario: Verify proximity between two gates with the same location hash using a proof
+/// Expected: Proximity verification succeeds
 #[test]
 fun verify_proximity() {
     let mut ts = ts::begin(governor());
@@ -125,6 +134,9 @@ fun verify_proximity() {
     ts::end(ts);
 }
 
+/// Tests that attaching location with invalid hash length fails
+/// Scenario: Attempt to attach location with hash length != 32 bytes
+/// Expected: Transaction aborts with EInvalidHashLength error
 #[test]
 #[expected_failure(abort_code = location::EInvalidHashLength)]
 fun attach_location_with_invalid_hash_length() {
