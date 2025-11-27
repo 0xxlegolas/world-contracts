@@ -13,6 +13,7 @@
     "fmt:ts:check": "prettier --check \"examples/**/*.ts\"",
     "sig-verify": "tsx examples/crypto/sig-verify.ts",
     "verify-location-proximity": "tsx examples/location/location-proximity-verify.ts",
+    "create-location-hash": "tsx examples/location/create-location-hash.ts",
     "create-character": "tsx examples/character/create-character.ts",
     "create-storage-unit": "tsx examples/storage-unit/create-storage-unit.ts",
     "online": "tsx examples/storage-unit/online.ts",
@@ -32,6 +33,7 @@
     "@mysten/sui": "^1.45.0",
     "@noble/hashes": "^1.3.3",
     "dotenv": "^17.2.3",
+    "poseidon-lite": "^0.2.1",
     "prettier": "^3.1.1"
   },
   "author": "EVE Frontier",
